@@ -90,7 +90,7 @@ namespace HomeWork1
             levelName + ConfigurationManager.AppSettings["LogExtension"];
 
         /// <summary>
-        /// 
+        /// Получить текст для записи в лог
         /// </summary>
         private static string GetLogText(string message, string level) =>
             $"{DateTime.Now} ({level}): {message}";
