@@ -1,16 +1,17 @@
-﻿using System;
+﻿using HomeWork1.LogUtility;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 
 namespace HomeWork1
 {
     public class LogWriter
     {
-        private static string generalPath = ConfigurationManager.AppSettings["LogFolderPath"]; 
-
         public static void WriteLog(string message, string levelName)
         {
-            var path = GetActualPath();
+            var path = LogService.GetActualPath();
             CreateFolder(path);
 
             string filePath = Path.Combine(path, GetFileExtensionName(levelName));
@@ -31,7 +32,7 @@ namespace HomeWork1
 
         public static void WriteLog(string message, string levelName, Exception e)
         {
-            var path = GetActualPath();
+            var path = LogService.GetActualPath();
             CreateFolder(path);
 
             string filePath = Path.Combine(path, GetFileExtensionName(levelName));
@@ -52,6 +53,103 @@ namespace HomeWork1
             }
         }
 
+        public static void WriteLog(string message, string levelName, params object[] args)
+        {
+            var path = LogService.GetActualPath();
+            CreateFolder(path);
+
+            string filePath = Path.Combine(path, GetFileExtensionName(levelName));
+            CreateFile(filePath);
+
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(filePath, append: true))
+                {
+                    sw.WriteLine(GetLogText(message, levelName));
+                    sw.WriteLine("Log args: " + string.Join(", ", args));
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public static void WriteLog(string message, string levelName, Dictionary<object, object> properties)
+        {
+            var path = LogService.GetActualPath();
+            CreateFolder(path);
+
+            string filePath = Path.Combine(path, GetFileExtensionName(levelName));
+            CreateFile(filePath);
+
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(filePath, append: true))
+                {
+                    sw.WriteLine(GetLogText(message, levelName));
+                    sw.WriteLine("Log properties: " + string.Join(", ", properties.Select(pair => $"{pair.Value}")));
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public static void WriteLogUnique(string message, string levelName)
+        {
+            var path = LogService.GetActualPath();
+            CreateFolder(path);
+
+            string filePath = Path.Combine(path, GetFileExtensionName(levelName));
+            var fullMessage = GetLogText(message, levelName);
+
+            if (LogReader.isUniqueLog(filePath, fullMessage))
+            {
+                CreateFile(filePath);
+                try
+                {
+                    using (StreamWriter sw = new StreamWriter(filePath, append: true))
+                    {
+                        sw.WriteLine(fullMessage);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        public static void WriteLogUnique(string message, string levelName, Exception e)
+        {
+            var path = LogService.GetActualPath();
+            CreateFolder(path);
+
+            string filePath = Path.Combine(path, GetFileExtensionName(levelName));
+            var fullMessage = GetLogText(message, levelName);
+
+            if (LogReader.isUniqueLog(filePath, fullMessage))
+            {
+                CreateFile(filePath);
+                try
+                {
+                    using (StreamWriter sw = new StreamWriter(filePath, append: true))
+                    {
+                        sw.WriteLine(fullMessage);
+                        sw.WriteLine(e.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
         /// <summary>
         /// Создать конечную папку
         /// </summary>
@@ -66,11 +164,6 @@ namespace HomeWork1
             }
 
         }
-
-        /// <summary>
-        /// Получить путь папки
-        /// </summary>
-        private static string GetActualPath() => $@"{generalPath}/{DateTime.Now:yyyy-MM-dd}";
 
         /// <summary>
         /// Создать файл логов

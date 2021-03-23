@@ -10,17 +10,17 @@ namespace HomeWork1
     {
         public void Debug(string message)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Debug);
         }
 
         public void Debug(string message, Exception e)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Debug, e);
         }
 
         public void DebugFormat(string message, params object[] args)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.DebugFormat, args);
         }
 
         public void Error(string message)
@@ -35,12 +35,12 @@ namespace HomeWork1
 
         public void Error(Exception ex)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog("ex", LogLevel.Error);
         }
 
         public void ErrorUnique(string message, Exception e)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLogUnique(message, LogLevel.Error, e);
         }
 
         public void Fatal(string message)
@@ -50,7 +50,7 @@ namespace HomeWork1
 
         public void Fatal(string message, Exception e)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Fatal, e);
         }
 
         public void Info(string message)
@@ -60,32 +60,32 @@ namespace HomeWork1
 
         public void Info(string message, Exception e)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Info, e);
         }
 
         public void Info(string message, params object[] args)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Info, args);
         }
 
         public void SystemInfo(string message, Dictionary<object, object> properties = null)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Info, properties);
         }
 
         public void Warning(string message)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Warning);
         }
 
         public void Warning(string message, Exception e)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLog(message, LogLevel.Warning, e);
         }
 
         public void WarningUnique(string message)
         {
-            throw new NotImplementedException();
+            LogWriter.WriteLogUnique(message, LogLevel.Warning);
         }
     }
 }
